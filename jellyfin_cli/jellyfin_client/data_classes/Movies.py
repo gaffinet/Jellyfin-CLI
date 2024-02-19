@@ -1,4 +1,4 @@
-from jellyfin_cli.jellyfin_client.data_classes.Items import Item
+from jellyfin_client.data_classes.Items import Item
 from datetime import datetime
 
 class Movie(Item):

@@ -1,7 +1,7 @@
-from jellyfin_cli.jellyfin_client.data_classes.Shows import Show, Episode
-from jellyfin_cli.jellyfin_client.data_classes.Movies import Movie
-from jellyfin_cli.jellyfin_client.data_classes.Audio import Album, Audio
-from jellyfin_cli.jellyfin_client.data_classes.Items import Playlist
+from jellyfin_client.data_classes.Shows import Show, Episode
+from jellyfin_client.data_classes.Movies import Movie
+from jellyfin_client.data_classes.Audio import Album, Audio
+from jellyfin_client.data_classes.Items import Playlist
 
 class HttpError(Exception):
     pass

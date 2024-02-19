@@ -29,9 +29,9 @@ class Playlist(Item):
         if res.status == 200:
             res = await res.json()
             r = []
-            from jellyfin_cli.jellyfin_client.data_classes.Audio import Audio
-            from jellyfin_cli.jellyfin_client.data_classes.Shows import Episode
-            from jellyfin_cli.jellyfin_client.data_classes.Movies import Movie
+            from jellyfin_client.data_classes.Audio import Audio
+            from jellyfin_client.data_classes.Shows import Episode
+            from jellyfin_client.data_classes.Movies import Movie
             for i in res["Items"]:
                 if i["Type"] == "Audio":
                     r.append(Audio(i, self.context))
@@ -41,5 +41,5 @@ class Playlist(Item):
                     r.append(Movie(i, self.context))
             return r
         else:
-            from jellyfin_cli.jellyfin_client.JellyfinClient import HttpError
+            from jellyfin_client.JellyfinClient import HttpError
             raise HttpError(await res.text())

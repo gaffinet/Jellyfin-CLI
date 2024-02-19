@@ -1,4 +1,4 @@
-from jellyfin_cli.jellyfin_client.data_classes.Items import Item
+from jellyfin_client.data_classes.Items import Item
 
 class Audio(Item):
     def __init__(self, res, context):

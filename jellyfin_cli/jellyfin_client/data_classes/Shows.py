@@ -1,4 +1,4 @@
-from jellyfin_cli.jellyfin_client.data_classes.Items import Item
+from jellyfin_client.data_classes.Items import Item
 
 class Show(Item):
     def __init__(self, res, context):
@@ -12,7 +12,7 @@ class Show(Item):
             res = await res.json()
             return [Season(i, self) for i in res["Items"]]
         else:
-            from jellyfin_cli.jellyfin_client.JellyfinClient import HttpError
+            from jellyfin_client.JellyfinClient import HttpError
             raise HttpError(await res.text())
 
 class Season(Item):
@@ -34,7 +34,7 @@ class Season(Item):
             res = await res.json()
             return [Episode(i, self.context) for i in res["Items"]]
         else:
-            from jellyfin_cli.jellyfin_client.JellyfinClient import HttpError
+            from jellyfin_client.JellyfinClient import HttpError
             raise HttpError(await res.text())
 
 class Episode(Item):

@@ -1,8 +1,9 @@
 from aiohttp import ClientSession
-from jellyfin_cli.jellyfin_client.data_classes.View import View
-from jellyfin_cli.jellyfin_client.data_classes.Shows import Episode, Show
-from jellyfin_cli.jellyfin_client.data_classes.Movies import Movie
-from jellyfin_cli.jellyfin_client.data_classes.Audio import Audio, Album
+from jellyfin_client.data_classes.View import View
+from jellyfin_client.data_classes.Shows import Episode, Show
+from jellyfin_client.data_classes.Movies import Movie
+from jellyfin_client.data_classes.Audio import Audio, Album
+
 
 class InvalidCredentialsError(Exception):
     def __init__(self):
@@ -58,13 +59,25 @@ class HttpClient:
                 "x-emby-authorization":'MediaBrowser Client="Jellyfin CLI", Device="Jellyfin-CLI", DeviceId="None", Version="10.4.3", Token="{}"'.format(token)
             })
             self.context = ServerContext(res, self.server, self.client, username=username)
-            from jellyfin_cli.utils.login_helper import store_creds
-            store_creds(self.context)
+            #from jellyfin_cli.utils.login_helper import store_creds
+            #store_creds(self.context)
             return True
         elif res.status == 401:
             raise InvalidCredentialsError()
         else:
             raise HttpError(await res.text())
+
+    async def get_show(self):
+        seriesId = 'b40761e638e4adb86c1bd6c6f4e76c68'
+        Show()
+        res = await self.context.client.get(f"{self.context.url}/Shows/{seriesId}/Episodes", params={
+            "UserId": self.context.user_id
+            })
+        if res.status == 200:
+            res = await res.json()
+            return [Episode(r, self.context) for r in res["Items"]]
+        else:
+            raise HttpError(await res.text())        
     
     async def get_views(self):
         res = await self.context.client.get("{}/Users/{}/Views".format(self.context.url, self.context.user_id))
@@ -98,7 +111,8 @@ class HttpClient:
             res = await res.json()
             return [Episode(r, self.context) for r in res["Items"]]
         else:
-            raise HttpError(await res.text())
+            raise HttpError(await res.text())                                   
+
 
     async def search(self, query, media_type, limit=30):
         res = await self.context.client.get("{}/Users/{}/Items".format(self.context.url, self.context.user_id), params={
@@ -157,3 +171,11 @@ class HttpClient:
         response = await self.context.client.get(f"{self.server}/Users/Me")
         if response.status != 200:
             raise HttpError(await response.text())
+
+    async def getItem(self, id):
+        response = await self.context.client.get(f"{self.server}/Users/{self.context.user_id}/Items/{id}")
+        return await response.json()
+        
+    
+#    async def on_request_start(session, context, params):
+#        logging.getLogger('aiohttp.client').debug(f'Starting request <{params}>')
